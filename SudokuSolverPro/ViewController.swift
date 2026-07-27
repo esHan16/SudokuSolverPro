@@ -20,7 +20,6 @@ class ViewController: UIViewController {
         
     }
 
-
 }
 
 extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -34,7 +33,7 @@ extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource,
         let row : Int = indexPath.row + 1
         
         cell.backView.backgroundColor = UIColor.white
-        cell.textLabel.text = ""
+        cell.textLabel.text = "\(indexPath.row / 9), \(indexPath.row % 9)"
         
         cell.topInnerView.isHidden = true
         cell.bottomInnerView.isHidden = true
@@ -75,5 +74,8 @@ extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0.1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     }
 }
