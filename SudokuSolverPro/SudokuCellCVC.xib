@@ -20,6 +20,22 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jYc-rp-UiJ">
                         <rect key="frame" x="0.0" y="0.0" width="135" height="140"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6j-JV-WCZ" userLabel="TrailingInner">
+                                <rect key="frame" x="133" y="0.0" width="1.3333333333333428" height="140"/>
+                                <viewLayoutGuide key="safeArea" id="JsM-zC-Q8u"/>
+                                <color key="backgroundColor" systemColor="systemTealColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1.3300000000000001" id="dvm-Gi-q5j"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P46-Kv-CFl" userLabel="TrailingOuter">
+                                <rect key="frame" x="134.33333333333334" y="0.0" width="0.66666666666665719" height="140"/>
+                                <viewLayoutGuide key="safeArea" id="urE-N5-XP2"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="0.66000000000000003" id="Xcd-5B-wVu"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Zm-7G-ztd" userLabel="LeadingOuter">
                                 <rect key="frame" x="0.0" y="0.0" width="0.66666666666666663" height="140"/>
                                 <color key="backgroundColor" systemColor="systemRedColor"/>
@@ -69,22 +85,6 @@
                                 <color key="backgroundColor" systemColor="systemGreenColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.66000000000000003" id="MKu-Q3-fgu"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6j-JV-WCZ" userLabel="TrailingInner">
-                                <rect key="frame" x="133" y="0.0" width="1.3333333333333428" height="140"/>
-                                <viewLayoutGuide key="safeArea" id="JsM-zC-Q8u"/>
-                                <color key="backgroundColor" systemColor="systemTealColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1.3300000000000001" id="dvm-Gi-q5j"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P46-Kv-CFl" userLabel="TrailingOuter">
-                                <rect key="frame" x="134.33333333333334" y="0.0" width="0.66666666666665719" height="140"/>
-                                <viewLayoutGuide key="safeArea" id="urE-N5-XP2"/>
-                                <color key="backgroundColor" systemColor="systemYellowColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="0.66000000000000003" id="Xcd-5B-wVu"/>
                                 </constraints>
                             </view>
                         </subviews>

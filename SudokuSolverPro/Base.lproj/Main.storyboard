@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq4-bx-fBM">
-                                <rect key="frame" x="15" y="242" width="360" height="360"/>
+                                <rect key="frame" x="15" y="162" width="360" height="360"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gj3-Ng-jXt">
-                                <rect key="frame" x="16" y="243" width="358" height="358"/>
+                                <rect key="frame" x="16" y="163" width="358" height="358"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Gj3-Ng-jXt" secondAttribute="height" id="Oln-BJ-vrV"/>
@@ -44,11 +44,12 @@
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="trailing" secondItem="aq4-bx-fBM" secondAttribute="trailing" constant="-1" id="S3Y-Se-WRs"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="leading" secondItem="aq4-bx-fBM" secondAttribute="leading" constant="1" id="TqX-mh-441"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="bottom" secondItem="aq4-bx-fBM" secondAttribute="bottom" constant="-1" id="bXz-GV-Fhe"/>
-                            <constraint firstItem="Gj3-Ng-jXt" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bz2-Ht-FfB"/>
+                            <constraint firstItem="Gj3-Ng-jXt" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-80" id="bz2-Ht-FfB"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Gj3-Ng-jXt" secondAttribute="trailing" constant="16" id="tI8-tF-ere"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="sudokuBackView" destination="aq4-bx-fBM" id="n4J-To-VWO"/>
                         <outlet property="sudokuCollectionView" destination="Gj3-Ng-jXt" id="r4o-2M-QdB"/>
                     </connections>
                 </viewController>
