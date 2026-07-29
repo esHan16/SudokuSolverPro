@@ -20,11 +20,13 @@ extension UIColor {
     }
 
     static func outerBoundary() -> UIColor {
-        UIColor(red: 49, green: 44, blue: 133)
+//        UIColor(red: 49, green: 44, blue: 133)
+        textColor()
     }
 
     static func innerBoundary() -> UIColor {
-        UIColor(red: 199, green: 210, blue: 255)
+        // UIColor(red: 199, green: 210, blue: 255)
+        UIColor(red: 194, green: 198, blue: 214)
     }
 
     static func selectedBackground() -> UIColor {
@@ -37,6 +39,18 @@ extension UIColor {
     
     static func errorTap() -> UIColor {
         UIColor(red: 255, green: 238, blue: 238)
+    }
+    
+    static func textColor() -> UIColor {
+        UIColor(red: 26, green: 28, blue: 28)
+    }
+    
+    static func selectedKeyColor() -> UIColor {
+        UIColor(red: 0, green: 88, blue: 188)
+    }
+    
+    static func defaultKeyColor() -> UIColor {
+        UIColor(red: 238, green: 238, blue: 238)
     }
     
 }

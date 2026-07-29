@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq4-bx-fBM">
-                                <rect key="frame" x="15" y="162" width="360" height="360"/>
+                                <rect key="frame" x="15" y="185" width="360" height="360"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gj3-Ng-jXt">
-                                <rect key="frame" x="16" y="163" width="358" height="358"/>
+                                <rect key="frame" x="16" y="186" width="358" height="358"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Gj3-Ng-jXt" secondAttribute="height" id="Oln-BJ-vrV"/>
@@ -34,21 +34,39 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kQg-un-KrP">
+                                <rect key="frame" x="36" y="569" width="318" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="sBu-vp-PeA"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ELy-hq-Ust">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="1l2-OH-A4m"/>
+                            <constraint firstItem="kQg-un-KrP" firstAttribute="centerX" secondItem="Gj3-Ng-jXt" secondAttribute="centerX" id="ALu-hp-4tO"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ezz-zT-UL8"/>
+                            <constraint firstItem="kQg-un-KrP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="GFE-lo-iJC"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="top" secondItem="aq4-bx-fBM" secondAttribute="top" constant="1" id="ON2-1C-n0d"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="trailing" secondItem="aq4-bx-fBM" secondAttribute="trailing" constant="-1" id="S3Y-Se-WRs"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="leading" secondItem="aq4-bx-fBM" secondAttribute="leading" constant="1" id="TqX-mh-441"/>
                             <constraint firstItem="Gj3-Ng-jXt" firstAttribute="bottom" secondItem="aq4-bx-fBM" secondAttribute="bottom" constant="-1" id="bXz-GV-Fhe"/>
-                            <constraint firstItem="Gj3-Ng-jXt" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-80" id="bz2-Ht-FfB"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Gj3-Ng-jXt" secondAttribute="trailing" constant="16" id="tI8-tF-ere"/>
+                            <constraint firstItem="kQg-un-KrP" firstAttribute="top" secondItem="aq4-bx-fBM" secondAttribute="bottom" constant="24" id="yfs-EK-IgM"/>
+                            <constraint firstItem="aq4-bx-fBM" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="91" id="ys8-fw-VEv"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="keyboardCVHeightAnchor" destination="sBu-vp-PeA" id="IhZ-qB-pTl"/>
+                        <outlet property="keyboardCollectionView" destination="kQg-un-KrP" id="jde-Hi-kPG"/>
                         <outlet property="sudokuBackView" destination="aq4-bx-fBM" id="n4J-To-VWO"/>
                         <outlet property="sudokuCollectionView" destination="Gj3-Ng-jXt" id="r4o-2M-QdB"/>
                     </connections>
