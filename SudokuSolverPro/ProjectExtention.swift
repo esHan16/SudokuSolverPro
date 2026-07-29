@@ -35,4 +35,8 @@ extension UIColor {
         UIColor(red: 224, green: 231, blue: 255)
     }
     
+    static func errorTap() -> UIColor {
+        UIColor(red: 255, green: 238, blue: 238)
+    }
+    
 }

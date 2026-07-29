@@ -9,18 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let board: [[Int]] = [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 6, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 2, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
-    
+    let board: [[Int]] = SudokuBoardDataSource.getSudoku()
+    var issueFlag : Bool = false
     var selectedIndex : Int = -1
     var selectedGridIndices: [Int] = []
     
@@ -32,7 +22,6 @@ class ViewController: UIViewController {
         sudokuCollectionView.register(UINib(nibName: "SudokuCellCVC", bundle: nil), forCellWithReuseIdentifier: "SudokuCellCVC")
         sudokuCollectionView.delegate = self
         sudokuCollectionView.dataSource = self
-//        sudokuCollectionView.backgroundColor = UIColor.black
         sudokuBackView.backgroundColor = UIColor.outerBoundary()
         sudokuCollectionView.backgroundColor = UIColor.innerBoundary()
         
@@ -56,29 +45,33 @@ extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource,
         let rowValue : Int = indexPath.row / 9
         let colValue : Int = indexPath.row % 9
         
-        if selectedIndex != -1 {
-            let selectedRow = selectedIndex / 9
-            let selectedCol = selectedIndex % 9
-            
-            if selectedRow == rowValue || selectedCol == colValue || selectedGridIndices.contains(row) {
-                cell.backView.backgroundColor = UIColor.selectedBackground()
-            } else {
-                cell.backView.backgroundColor = UIColor.white
-            }
-            
-            if selectedIndex == indexPath.row {
-                cell.backView.backgroundColor = UIColor.selectedBackground2()
-            }
-            
-        }
-        
         if(board[rowValue][colValue] != 0){
             cell.textLabel.text = "\(board[rowValue][colValue])"
         } else {
             cell.textLabel.text = ""
         }
         
-//        cell.textLabel.text = "\(row)"
+        if issueFlag {
+            if selectedIndex == indexPath.row {
+                cell.backView.backgroundColor = UIColor.errorTap()
+            }
+        } else {
+            if selectedIndex != -1 {
+                let selectedRow = selectedIndex / 9
+                let selectedCol = selectedIndex % 9
+                
+                if selectedRow == rowValue || selectedCol == colValue || selectedGridIndices.contains(row) {
+                    cell.backView.backgroundColor = UIColor.selectedBackground()
+                } else {
+                    cell.backView.backgroundColor = UIColor.white
+                }
+                
+                if selectedIndex == indexPath.row {
+                    cell.backView.backgroundColor = UIColor.selectedBackground2()
+                }
+                
+            }
+        }
         
         cell.topOuterView.backgroundColor = UIColor.innerBoundary()
         cell.bottomOuterView.backgroundColor = UIColor.innerBoundary()
@@ -137,25 +130,29 @@ extension ViewController : UICollectionViewDelegate, UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(selectedIndex != indexPath.row) {
             
-            selectedIndex = indexPath.row
-            
             selectedGridIndices.removeAll()
+            
+            selectedIndex = indexPath.row
             
             let selectedRow = selectedIndex / 9
             let selectedCol = selectedIndex % 9
             
-            let gridRow = selectedRow / 3
-            let gridCol = selectedCol / 3
+            if(board[selectedRow][selectedCol] != 0){
+                issueFlag = true
+            } else {
+                issueFlag = false
+                let gridRow = selectedRow / 3
+                let gridCol = selectedCol / 3
 
-            for i in 0..<3 {
-                for j in 0..<3 {
-                    let cellRow = 3 * gridRow + i
-                    let cellCol = 3 * gridCol + j
-                    let index = cellRow * 9 + cellCol + 1
-                    selectedGridIndices.append(index)
+                for i in 0..<3 {
+                    for j in 0..<3 {
+                        let cellRow = 3 * gridRow + i
+                        let cellCol = 3 * gridCol + j
+                        let index = cellRow * 9 + cellCol + 1
+                        selectedGridIndices.append(index)
+                    }
                 }
             }
-            
         }
         self.sudokuCollectionView.reloadData()
     }
