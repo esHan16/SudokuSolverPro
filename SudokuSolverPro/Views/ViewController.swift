@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     var issueFlag: Bool = false
     var selectedIndex: Int = -1
     var selectedGridIndices: [Int] = []
+    var numberOfKeys : Int = 9
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var difficultyLevelLabel: UILabel!
@@ -22,7 +23,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var sudokuCollectionView: UICollectionView!
     @IBOutlet weak var pausePlayButtonImage: UIImageView!
     @IBOutlet weak var settingButtonImage: UIImageView!
-
+    @IBOutlet weak var timerIcon: UIImageView!
     private var timer: Timer?
     private var startDate: Date?
     private var remainingSeconds: Int = 0
@@ -53,15 +54,14 @@ class ViewController: UIViewController {
         keyboardCollectionView.tag = 1002
 
         let cvWidth = self.view.bounds.size.width - 36.0 * 2
-
-        let numberOfCells = 3
+        let numberOfCols = 3
         let spacing: CGFloat = 12.0
-        let cells = CGFloat(numberOfCells)
+        let cells = CGFloat(numberOfCols)
         let cellWidth = (cvWidth - ((cells - 1) * spacing)) / cells
         let cellHeight = cellWidth * 64.0 / 98.0
-
+        let numbersOfRows : CGFloat = CGFloat(numberOfKeys / numberOfCols)
         self.keyboardCVHeightAnchor.constant =
-            (cellHeight * 3) + ((cells - 1) * spacing)
+            (cellHeight * numbersOfRows) + ((cells - 1) * spacing)
 
         self.settingButtonImage.image = UIImage(named: "Settings_Icon")
 
@@ -74,6 +74,8 @@ class ViewController: UIViewController {
         self.timerLabel.textColor = UIColor.timerColor()
         self.timerLabel.font = UIFont.regular(15)
         self.timerLabel.text = "00:00"
+        
+        self.timerIcon.image = UIImage(named: "Timer_Icon")
 
         NotificationCenter.default.addObserver(
             self,
@@ -83,6 +85,7 @@ class ViewController: UIViewController {
         )
 
         restoreTimerIfNeeded()
+        
     }
 
     func startTimer(duration: Int) {
@@ -247,13 +250,21 @@ class ViewController: UIViewController {
 
     @IBAction func settingsBtnTapped(_ sender: Any) {
 
+        let settingVC = SettingViewController(nibName: "SettingViewController", bundle: nil)
+        
+        if let sheet = settingVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+        }
+        
+        self.present(settingVC, animated: true, completion: nil)
+
     }
 
     @IBAction func startTapped(_ sender: UIButton) {
         startTimer(duration: 90 * 60)
         updatePausePlayUI()
     }
-
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -270,7 +281,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         if collectionView.tag == 1001 {
             return 81
         } else if collectionView.tag == 1002 {
-            return 9
+            return numberOfKeys
         }
         return 0
     }
