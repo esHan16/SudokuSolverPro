@@ -32,7 +32,7 @@ class SudokuCellCVC: UICollectionViewCell {
         self.trailingInnerView.backgroundColor = .black
         self.trailingOuterView.backgroundColor = .black
         
-        self.textLabel.textColor = .black
+        self.textLabel.textColor = UIColor.textColor()
         
         self.textLabel.font = UIFont.systemFont(ofSize: 22)
         

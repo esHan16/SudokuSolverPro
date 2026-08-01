@@ -53,4 +53,39 @@ extension UIColor {
         UIColor(red: 238, green: 238, blue: 238)
     }
     
+    static func timerColor() -> UIColor {
+        UIColor(red: 65, green: 71, blue: 85)
+    }
+    
+}
+
+extension UIFont {
+
+    static func light(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .light)
+    }
+
+    static func regular(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .regular)
+    }
+
+    static func medium(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .medium)
+    }
+
+    static func semibold(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .semibold)
+    }
+
+    static func bold(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .bold)
+    }
+
+    static func heavy(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .heavy)
+    }
+
+    static func black(_ size: CGFloat) -> UIFont {
+        .systemFont(ofSize: size, weight: .black)
+    }
 }
