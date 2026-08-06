@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     let board: [[Int]] = SudokuBoardDataSource.getSudoku()
     
     var tempBoard : [[Int]] = [[]]
@@ -16,6 +16,12 @@ class ViewController: UIViewController {
     var isZeroBoard: [[Bool]] {
         board.map { $0.map { $0 == 0 } }
     }
+    
+    var nonZeroCount : Int {
+        board.flatMap { $0 }.filter { $0 != 0 }.count
+    }
+    
+    var count : Int = 0
     
     var issueFlag: Bool = false
     var selectedIndex: Int = -1
@@ -42,6 +48,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        count = nonZeroCount
+        
         tempBoard = board
         
         sudokuBackView.backgroundColor = UIColor.outerBoundary()
@@ -94,6 +102,20 @@ class ViewController: UIViewController {
         )
 
         restoreTimerIfNeeded()
+        
+        DispatchQueue.global(qos: .utility).async {
+            var newTempBoard = self.tempBoard
+            
+            if SudokuBoardDataSource.sudokuSolver(&newTempBoard, 0, 0) {
+                for row in newTempBoard {
+                    print(row)
+                }
+            } else {
+                print("No solution exists for this board.")
+            }
+        }
+        
+        
         
     }
 
@@ -259,13 +281,13 @@ class ViewController: UIViewController {
 
     @IBAction func homeBtnTapped(_ sender: Any) {
 
-        let settingVC = SettingViewController(nibName: "SettingViewController", bundle: nil)
-        
-        if let sheet = settingVC.sheetPresentationController {
-            sheet.detents = [.medium()]
-        }
-        
-        self.present(settingVC, animated: true, completion: nil)
+//        let settingVC = SettingViewController(nibName: "SettingViewController", bundle: nil)
+//        
+//        if let sheet = settingVC.sheetPresentationController {
+//            sheet.detents = [.medium()]
+//        }
+//        
+//        self.present(settingVC, animated: true, completion: nil)
 
     }
 
@@ -550,12 +572,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         if SudokuBoardDataSource.sudokuSolver(&tempBoard, 0, 0) {
             self.sudokuCollectionView.reloadData()
         } else {
-            print("No solution exists for this board.")
+            self.showToast(message: "No solution exists for this board.")
         }
-    }
-    
-    func undoLastMove() {
-        
     }
     
     func erase() {
@@ -564,6 +582,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             let selectedCol = selectedIndex % 9
             if isZeroBoard[selectedRow][selectedCol] == true && tempBoard[selectedRow][selectedCol] >= 1 && tempBoard[selectedRow][selectedCol] <= 9 {
                 tempBoard[selectedRow][selectedCol] = 0
+                count -= 1
                 self.sudokuCollectionView.reloadData()
             }
         }
@@ -580,7 +599,17 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             let selectedCol = selectedIndex % 9
             if tempBoard[selectedRow][selectedCol] == 0 {
                 tempBoard[selectedRow][selectedCol] = key
+                count += 1
                 self.sudokuCollectionView.reloadData()
+                if(count == 81){
+                    playPauseTapped(self)
+                }
+                if SudokuBoardDataSource.sudokuSolver(&tempBoard, 0, 0) {
+                    
+                } else {
+                    resumeTimer()
+                    self.showToast(message: "The puzzle has mistakes in it.")
+                }
             }
         }
     }
