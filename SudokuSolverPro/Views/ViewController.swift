@@ -10,20 +10,22 @@ import UIKit
 class ViewController: UIViewController {
 
     let board: [[Int]] = SudokuBoardDataSource.getSudoku()
+    
     var issueFlag: Bool = false
     var selectedIndex: Int = -1
     var selectedGridIndices: [Int] = []
     var numberOfKeys : Int = 9
+    var numberOfControlKeys : Int = 4
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var difficultyLevelLabel: UILabel!
-    @IBOutlet weak var keyboardCVHeightAnchor: NSLayoutConstraint!
     @IBOutlet weak var keyboardCollectionView: UICollectionView!
     @IBOutlet weak var sudokuBackView: UIView!
     @IBOutlet weak var sudokuCollectionView: UICollectionView!
     @IBOutlet weak var pausePlayButtonImage: UIImageView!
-    @IBOutlet weak var settingButtonImage: UIImageView!
+    @IBOutlet weak var homeButtonImage: UIImageView!
     @IBOutlet weak var timerIcon: UIImageView!
+    @IBOutlet weak var controlCV: UICollectionView!
     private var timer: Timer?
     private var startDate: Date?
     private var remainingSeconds: Int = 0
@@ -52,18 +54,17 @@ class ViewController: UIViewController {
         keyboardCollectionView.delegate = self
         keyboardCollectionView.backgroundColor = UIColor.clear
         keyboardCollectionView.tag = 1002
+        
+        controlCV.register(
+            UINib(nibName: "ControlCVC", bundle: nil),
+            forCellWithReuseIdentifier: "ControlCVC"
+        )
+        controlCV.dataSource = self
+        controlCV.delegate = self
+        controlCV.backgroundColor = UIColor.clear
+        controlCV.tag = 1003
 
-        let cvWidth = self.view.bounds.size.width - 36.0 * 2
-        let numberOfCols = 3
-        let spacing: CGFloat = 12.0
-        let cells = CGFloat(numberOfCols)
-        let cellWidth = (cvWidth - ((cells - 1) * spacing)) / cells
-        let cellHeight = cellWidth * 64.0 / 98.0
-        let numbersOfRows : CGFloat = CGFloat(numberOfKeys / numberOfCols)
-        self.keyboardCVHeightAnchor.constant =
-            (cellHeight * numbersOfRows) + ((cells - 1) * spacing)
-
-        self.settingButtonImage.image = UIImage(named: "Settings_Icon")
+        self.homeButtonImage.image = UIImage(named: "Home_Icon")
 
         updatePausePlayUI()
 
@@ -248,7 +249,7 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func settingsBtnTapped(_ sender: Any) {
+    @IBAction func homeBtnTapped(_ sender: Any) {
 
         let settingVC = SettingViewController(nibName: "SettingViewController", bundle: nil)
         
@@ -282,6 +283,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             return 81
         } else if collectionView.tag == 1002 {
             return numberOfKeys
+        } else if collectionView.tag == 1003 {
+            return numberOfControlKeys
         }
         return 0
     }
@@ -388,6 +391,25 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             cell.bindData(key: indexPath.row)
             cell.delegate = self
             return cell
+        } else if collectionView.tag == 1003 {
+            let cell =
+                collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "ControlCVC",
+                    for: indexPath
+                ) as! ControlCVC
+            if indexPath.row == 0 {
+                cell.bindDataForReset()
+            } else if indexPath.row == 1 {
+                cell.bindDataForUndo()
+            } else if indexPath.row == 2 {
+                cell.bindDataForErase()
+            } else if indexPath.row == 3 {
+                cell.bindDataForSolve()
+            }
+            let height = collectionView.bounds.height
+            let cellWidth = height * 48.0 / 70.0
+            cell.widthCons.constant = cellWidth
+            return cell
         }
         return UICollectionViewCell()
 
@@ -399,18 +421,27 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         if collectionView.tag == 1001 {
-            let side: CGFloat = collectionView.frame.width / 9.0
-            return CGSize(width: side, height: side)
+            let totalWidth = collectionView.bounds.width
+            let totalHeight = collectionView.bounds.height
+
+            let col = CGFloat(indexPath.item % 9)
+            let row = CGFloat(indexPath.item / 9)
+
+            let cellWidth = floor((col + 1) * totalWidth / 9.0) - floor(col * totalWidth / 9.0)
+            let cellHeight = floor((row + 1) * totalHeight / 9.0) - floor(row * totalHeight / 9.0)
+
+            return CGSize(width: cellWidth, height: cellHeight)
         } else if collectionView.tag == 1002 {
             let numberOfCells = 3
             let spacing: CGFloat = 12.0
             let cells = CGFloat(numberOfCells)
-
-            let width =
-                (collectionView.frame.width - ((cells - 1) * spacing)) / cells
-            let height = width * 64.0 / 98.0
-
+            let width = (collectionView.frame.width - ((cells - 1) * spacing)) / cells
+            let height = (collectionView.frame.height - ((cells - 1) * spacing)) / cells
             return CGSize(width: width, height: height)
+        } else if collectionView.tag == 1003 {
+            let height = collectionView.bounds.height
+            let cellWidth = height * 48.0 / 70.0
+            return CGSize(width: cellWidth, height: height)
         }
         return CGSize.zero
     }
@@ -421,11 +452,28 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         minimumInteritemSpacingForSectionAt section: Int
     ) -> CGFloat {
         if collectionView.tag == 1001 {
-            return 0.1
+            return 0
         } else if collectionView.tag == 1002 {
             return 12.0
+        } else if collectionView.tag == 1003 {
+            let totalWidth = collectionView.bounds.width
+            let height = collectionView.bounds.height
+            let cellWidth = height * 48.0 / 70.0
+            let spacing: CGFloat = (totalWidth - cellWidth * CGFloat(numberOfControlKeys)) / (CGFloat(numberOfControlKeys) + 1.0)
+            return spacing
         }
-        return 0.1
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if collectionView.tag == 1003 {
+            let totalWidth = collectionView.bounds.width
+            let height = collectionView.bounds.height
+            let cellWidth = height * 48.0 / 70.0
+            let spacing: CGFloat = (totalWidth - cellWidth * CGFloat(numberOfControlKeys)) / (CGFloat(numberOfControlKeys) + 1.0)
+            return UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
+        }
+        return .zero
     }
 
     func collectionView(
@@ -434,11 +482,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         minimumLineSpacingForSectionAt section: Int
     ) -> CGFloat {
         if collectionView.tag == 1001 {
-            return 0.1
+            return 0
         } else if collectionView.tag == 1002 {
             return 12.0
         }
-        return 0.1
+        return 0
     }
 
     func collectionView(
