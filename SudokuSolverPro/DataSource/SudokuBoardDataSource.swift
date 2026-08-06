@@ -150,4 +150,59 @@ class SudokuBoardDataSource {
         return getRandomSudoku(from: tenSudokuPuzzles)
     }
     
+    static func sudokuSolver(_ arr: inout [[Int]], _ row: Int, _ col: Int) -> Bool {
+        if row == 9 {
+            return true
+        }
+        if col == 9 {
+            // Pass the array by reference using '&'
+            return sudokuSolver(&arr, row + 1, 0)
+        }
+        if arr[row][col] != 0 {
+            return sudokuSolver(&arr, row, col + 1)
+        }
+        
+        for i in 1...9 {
+            if isSudokuSafe(arr, row, col, i) {
+                arr[row][col] = i
+                
+                if sudokuSolver(&arr, row, col + 1) {
+                    return true
+                }
+                
+                arr[row][col] = 0 // backtracking
+            }
+        }
+        
+        return false
+    }
+
+    static func isSudokuSafe(_ arr: [[Int]], _ row: Int, _ col: Int, _ num: Int) -> Bool {
+        // Check row and column
+        for i in 0..<9 {
+            if arr[row][i] == num {
+                return false
+            }
+            if arr[i][col] == num {
+                return false
+            }
+        }
+        
+        // Check 3x3 grid
+        let gridRow = row / 3
+        let gridCol = col / 3
+        
+        for i in 0..<3 {
+            for j in 0..<3 {
+                let cellRow = 3 * gridRow + i
+                let cellCol = 3 * gridCol + j
+                if arr[cellRow][cellCol] == num {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
 }

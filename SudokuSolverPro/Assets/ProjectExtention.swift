@@ -57,6 +57,10 @@ extension UIColor {
         UIColor(red: 65, green: 71, blue: 85)
     }
     
+    static func enteredTextColor() -> UIColor {
+        UIColor(red: 47, green: 158, blue: 68)
+    }
+    
 }
 
 extension UIFont {

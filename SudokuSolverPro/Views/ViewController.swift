@@ -11,11 +11,17 @@ class ViewController: UIViewController {
 
     let board: [[Int]] = SudokuBoardDataSource.getSudoku()
     
+    var tempBoard : [[Int]] = [[]]
+    
+    var isZeroBoard: [[Bool]] {
+        board.map { $0.map { $0 == 0 } }
+    }
+    
     var issueFlag: Bool = false
     var selectedIndex: Int = -1
     var selectedGridIndices: [Int] = []
     var numberOfKeys : Int = 9
-    var numberOfControlKeys : Int = 4
+    var numberOfControlKeys : Int = 3
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var difficultyLevelLabel: UILabel!
@@ -36,6 +42,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tempBoard = board
+        
         sudokuBackView.backgroundColor = UIColor.outerBoundary()
         sudokuCollectionView.register(
             UINib(nibName: "SudokuCellCVC", bundle: nil),
@@ -309,8 +317,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             let rowValue: Int = indexPath.row / 9
             let colValue: Int = indexPath.row % 9
 
-            if board[rowValue][colValue] != 0 {
-                cell.textLabel.text = "\(board[rowValue][colValue])"
+            if tempBoard[rowValue][colValue] != 0 {
+                cell.textLabel.text = "\(tempBoard[rowValue][colValue])"
             } else {
                 cell.textLabel.text = ""
             }
@@ -380,6 +388,12 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.bottomInnerView.backgroundColor = UIColor.outerBoundary()
                 cell.bottomOuterView.backgroundColor = UIColor.outerBoundary()
             }
+            
+            if isZeroBoard[rowValue][colValue] == true {
+                cell.textLabel.textColor = UIColor.enteredTextColor()
+            } else {
+                cell.textLabel.textColor = UIColor.black
+            }
 
             return cell
         } else if collectionView.tag == 1002 {
@@ -400,10 +414,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             if indexPath.row == 0 {
                 cell.bindDataForReset()
             } else if indexPath.row == 1 {
-                cell.bindDataForUndo()
-            } else if indexPath.row == 2 {
                 cell.bindDataForErase()
-            } else if indexPath.row == 3 {
+            } else if indexPath.row == 2 {
                 cell.bindDataForSolve()
             }
             let height = collectionView.bounds.height
@@ -503,7 +515,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                 let selectedRow = selectedIndex / 9
                 let selectedCol = selectedIndex % 9
 
-                if board[selectedRow][selectedCol] != 0 {
+                if tempBoard[selectedRow][selectedCol] != 0 && !isZeroBoard[selectedRow][selectedCol] {
                     issueFlag = true
                 } else {
                     issueFlag = false
@@ -521,12 +533,56 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                 }
             }
             self.sudokuCollectionView.reloadData()
+        } else if collectionView.tag == 1003 {
+            if indexPath.row == 0 {
+                resetSudoku()
+            } else if indexPath.row == 1 {
+                erase()
+            } else if indexPath.row == 2 {
+                solveSudoku()
+            }
         }
 
     }
+    
+    func solveSudoku() {
+        tempBoard = board
+        if SudokuBoardDataSource.sudokuSolver(&tempBoard, 0, 0) {
+            self.sudokuCollectionView.reloadData()
+        } else {
+            print("No solution exists for this board.")
+        }
+    }
+    
+    func undoLastMove() {
+        
+    }
+    
+    func erase() {
+        if selectedIndex != -1 {
+            let selectedRow = selectedIndex / 9
+            let selectedCol = selectedIndex % 9
+            if isZeroBoard[selectedRow][selectedCol] == true && tempBoard[selectedRow][selectedCol] >= 1 && tempBoard[selectedRow][selectedCol] <= 9 {
+                tempBoard[selectedRow][selectedCol] = 0
+                self.sudokuCollectionView.reloadData()
+            }
+        }
+    }
+    
+    func resetSudoku() {
+        tempBoard = board
+        self.sudokuCollectionView.reloadData()
+    }
 
     func didTapOnKey(key: Int) {
-
+        if(selectedIndex >= 0 && selectedIndex <= 80) {
+            let selectedRow = selectedIndex / 9
+            let selectedCol = selectedIndex % 9
+            if tempBoard[selectedRow][selectedCol] == 0 {
+                tempBoard[selectedRow][selectedCol] = key
+                self.sudokuCollectionView.reloadData()
+            }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

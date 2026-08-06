@@ -34,7 +34,7 @@ class SudokuCellCVC: UICollectionViewCell {
         
         self.textLabel.textColor = UIColor.textColor()
         
-        self.textLabel.font = UIFont.systemFont(ofSize: 22)
+        self.textLabel.font = UIFont.semibold(22)
         
     }
 
