@@ -61,6 +61,18 @@ extension UIColor {
         UIColor(red: 47, green: 158, blue: 68)
     }
     
+    static func localeColor() -> UIColor {
+        UIColor(red: 65, green: 71, blue: 85)
+    }
+    
+    static func borderColor() -> UIColor {
+        UIColor(red: 226, green: 226, blue: 226)
+    }
+    
+    static func homeBGColor() -> UIColor {
+        UIColor(red: 238, green: 238, blue: 238)
+    }
+    
 }
 
 extension UIFont {
