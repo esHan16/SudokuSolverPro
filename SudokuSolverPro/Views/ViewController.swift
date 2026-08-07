@@ -8,26 +8,27 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    let board: [[Int]] = SudokuBoardDataSource.getSudoku()
-    
-    var tempBoard : [[Int]] = [[]]
-    
+
+    public var board: [[Int]] = [[]]
+
+    var tempBoard: [[Int]] = [[]]
+
     var isZeroBoard: [[Bool]] {
         board.map { $0.map { $0 == 0 } }
     }
-    
-    var nonZeroCount : Int {
+
+    var nonZeroCount: Int {
         board.flatMap { $0 }.filter { $0 != 0 }.count
     }
-    
-    var count : Int = 0
-    
+
+    var count: Int = 0
+    var actualCount: Int = 0
+
     var issueFlag: Bool = false
     var selectedIndex: Int = -1
     var selectedGridIndices: [Int] = []
-    var numberOfKeys : Int = 9
-    var numberOfControlKeys : Int = 3
+    var numberOfKeys: Int = 9
+    var numberOfControlKeys: Int = 3
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var difficultyLevelLabel: UILabel!
@@ -49,9 +50,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         count = nonZeroCount
-        
+
+        actualCount = count
+
         tempBoard = board
-        
+
         sudokuBackView.backgroundColor = UIColor.outerBoundary()
         sudokuCollectionView.register(
             UINib(nibName: "SudokuCellCVC", bundle: nil),
@@ -70,7 +73,7 @@ class ViewController: UIViewController {
         keyboardCollectionView.delegate = self
         keyboardCollectionView.backgroundColor = UIColor.clear
         keyboardCollectionView.tag = 1002
-        
+
         controlCV.register(
             UINib(nibName: "ControlCVC", bundle: nil),
             forCellWithReuseIdentifier: "ControlCVC"
@@ -91,7 +94,7 @@ class ViewController: UIViewController {
         self.timerLabel.textColor = UIColor.timerColor()
         self.timerLabel.font = UIFont.regular(15)
         self.timerLabel.text = "00:00"
-        
+
         self.timerIcon.image = UIImage(named: "Timer_Icon")
 
         NotificationCenter.default.addObserver(
@@ -102,10 +105,10 @@ class ViewController: UIViewController {
         )
 
         restoreTimerIfNeeded()
-        
+
         DispatchQueue.global(qos: .utility).async {
             var newTempBoard = self.tempBoard
-            
+
             if SudokuBoardDataSource.sudokuSolver(&newTempBoard, 0, 0) {
                 for row in newTempBoard {
                     print(row)
@@ -114,9 +117,7 @@ class ViewController: UIViewController {
                 print("No solution exists for this board.")
             }
         }
-        
-        
-        
+
     }
 
     func startTimer(duration: Int) {
@@ -232,7 +233,9 @@ class ViewController: UIViewController {
     // MARK: - Restore after Background / Relaunch
 
     private func restoreTimerIfNeeded() {
-        if let savedStartDate = UserDefaults.standard.object(forKey: timerKey) as? Date {
+        if let savedStartDate = UserDefaults.standard.object(forKey: timerKey)
+            as? Date
+        {
             // Always restore as running and continue counting up
             startDate = savedStartDate
             isRunning = true
@@ -281,13 +284,32 @@ class ViewController: UIViewController {
 
     @IBAction func homeBtnTapped(_ sender: Any) {
 
-//        let settingVC = SettingViewController(nibName: "SettingViewController", bundle: nil)
-//        
-//        if let sheet = settingVC.sheetPresentationController {
-//            sheet.detents = [.medium()]
-//        }
-//        
-//        self.present(settingVC, animated: true, completion: nil)
+        if actualCount < count {
+            let alert = UIAlertController(
+                title: "Leave Game?",
+                message:
+                    "Are you sure you want to leave this current game? Your progress will be lost.",
+                preferredStyle: .alert
+            )
+
+            let stayAction = UIAlertAction(title: "Stay", style: .cancel) { _ in
+                
+            }
+
+            let leaveAction = UIAlertAction(title: "Leave", style: .destructive)
+            { [weak self] _ in
+                stopTimer()
+                self?.dismiss(animated: true)
+            }
+
+            alert.addAction(stayAction)
+            alert.addAction(leaveAction)
+
+            present(alert, animated: true)
+        } else {
+            stopTimer()
+            self.dismiss(animated: true)
+        }
 
     }
 
@@ -295,7 +317,7 @@ class ViewController: UIViewController {
         startTimer(duration: 90 * 60)
         updatePausePlayUI()
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -410,7 +432,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                 cell.bottomInnerView.backgroundColor = UIColor.outerBoundary()
                 cell.bottomOuterView.backgroundColor = UIColor.outerBoundary()
             }
-            
+
             if isZeroBoard[rowValue][colValue] == true {
                 cell.textLabel.textColor = UIColor.enteredTextColor()
             } else {
@@ -461,16 +483,22 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             let col = CGFloat(indexPath.item % 9)
             let row = CGFloat(indexPath.item / 9)
 
-            let cellWidth = floor((col + 1) * totalWidth / 9.0) - floor(col * totalWidth / 9.0)
-            let cellHeight = floor((row + 1) * totalHeight / 9.0) - floor(row * totalHeight / 9.0)
+            let cellWidth =
+                floor((col + 1) * totalWidth / 9.0)
+                - floor(col * totalWidth / 9.0)
+            let cellHeight =
+                floor((row + 1) * totalHeight / 9.0)
+                - floor(row * totalHeight / 9.0)
 
             return CGSize(width: cellWidth, height: cellHeight)
         } else if collectionView.tag == 1002 {
             let numberOfCells = 3
             let spacing: CGFloat = 12.0
             let cells = CGFloat(numberOfCells)
-            let width = (collectionView.frame.width - ((cells - 1) * spacing)) / cells
-            let height = (collectionView.frame.height - ((cells - 1) * spacing)) / cells
+            let width =
+                (collectionView.frame.width - ((cells - 1) * spacing)) / cells
+            let height =
+                (collectionView.frame.height - ((cells - 1) * spacing)) / cells
             return CGSize(width: width, height: height)
         } else if collectionView.tag == 1003 {
             let height = collectionView.bounds.height
@@ -493,19 +521,32 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             let totalWidth = collectionView.bounds.width
             let height = collectionView.bounds.height
             let cellWidth = height * 48.0 / 70.0
-            let spacing: CGFloat = (totalWidth - cellWidth * CGFloat(numberOfControlKeys)) / (CGFloat(numberOfControlKeys) + 1.0)
+            let spacing: CGFloat =
+                (totalWidth - cellWidth * CGFloat(numberOfControlKeys))
+                / (CGFloat(numberOfControlKeys) + 1.0)
             return spacing
         }
         return 0
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
         if collectionView.tag == 1003 {
             let totalWidth = collectionView.bounds.width
             let height = collectionView.bounds.height
             let cellWidth = height * 48.0 / 70.0
-            let spacing: CGFloat = (totalWidth - cellWidth * CGFloat(numberOfControlKeys)) / (CGFloat(numberOfControlKeys) + 1.0)
-            return UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
+            let spacing: CGFloat =
+                (totalWidth - cellWidth * CGFloat(numberOfControlKeys))
+                / (CGFloat(numberOfControlKeys) + 1.0)
+            return UIEdgeInsets(
+                top: 0,
+                left: spacing,
+                bottom: 0,
+                right: spacing
+            )
         }
         return .zero
     }
@@ -537,7 +578,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                 let selectedRow = selectedIndex / 9
                 let selectedCol = selectedIndex % 9
 
-                if tempBoard[selectedRow][selectedCol] != 0 && !isZeroBoard[selectedRow][selectedCol] {
+                if tempBoard[selectedRow][selectedCol] != 0
+                    && !isZeroBoard[selectedRow][selectedCol]
+                {
                     issueFlag = true
                 } else {
                     issueFlag = false
@@ -566,7 +609,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         }
 
     }
-    
+
     func solveSudoku() {
         tempBoard = board
         if SudokuBoardDataSource.sudokuSolver(&tempBoard, 0, 0) {
@@ -575,40 +618,37 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             self.showToast(message: "No solution exists for this board.")
         }
     }
-    
+
     func erase() {
         if selectedIndex != -1 {
             let selectedRow = selectedIndex / 9
             let selectedCol = selectedIndex % 9
-            if isZeroBoard[selectedRow][selectedCol] == true && tempBoard[selectedRow][selectedCol] >= 1 && tempBoard[selectedRow][selectedCol] <= 9 {
+            if isZeroBoard[selectedRow][selectedCol] == true
+                && tempBoard[selectedRow][selectedCol] >= 1
+                && tempBoard[selectedRow][selectedCol] <= 9
+            {
                 tempBoard[selectedRow][selectedCol] = 0
                 count -= 1
                 self.sudokuCollectionView.reloadData()
             }
         }
     }
-    
+
     func resetSudoku() {
         tempBoard = board
         self.sudokuCollectionView.reloadData()
     }
 
     func didTapOnKey(key: Int) {
-        if(selectedIndex >= 0 && selectedIndex <= 80) {
+        if selectedIndex >= 0 && selectedIndex <= 80 {
             let selectedRow = selectedIndex / 9
             let selectedCol = selectedIndex % 9
             if tempBoard[selectedRow][selectedCol] == 0 {
                 tempBoard[selectedRow][selectedCol] = key
                 count += 1
                 self.sudokuCollectionView.reloadData()
-                if(count == 81){
+                if count == 81 {
                     playPauseTapped(self)
-                }
-                if SudokuBoardDataSource.sudokuSolver(&tempBoard, 0, 0) {
-                    
-                } else {
-                    resumeTimer()
-                    self.showToast(message: "The puzzle has mistakes in it.")
                 }
             }
         }

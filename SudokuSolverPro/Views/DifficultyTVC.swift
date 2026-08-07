@@ -15,6 +15,8 @@ class DifficultyTVC: UITableViewCell, UICollectionViewDelegate, UICollectionView
     
     var dataArray : [DifficultyCellData] = []
     
+    weak var delegate : DifficultyDelegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -63,4 +65,13 @@ class DifficultyTVC: UITableViewCell, UICollectionViewDelegate, UICollectionView
         
         return .zero
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let data : DifficultyCellData = self.dataArray[indexPath.row]
+        
+        delegate?.didSelectDifficulty(data.title.lowercased())
+        
+    }
+    
 }

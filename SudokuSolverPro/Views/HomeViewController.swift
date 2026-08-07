@@ -17,6 +17,8 @@ class HomeViewController: UIViewController {
     
     lazy var localeScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LocalizationViewController")
     
+    
+    
     @IBOutlet weak var customNavBar: UIView!
     @IBOutlet weak var navBarTitleLabel: UILabel!
     @IBOutlet weak var localeImage: UIImageView!
@@ -94,6 +96,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "NewGameTVC", for: indexPath) as? NewGameTVC else {
                 return UITableViewCell()
             }
+            cell.delegate = self
             cell.selectionStyle = .none
             cell.backgroundColor = UIColor.clear
             return cell;
@@ -101,6 +104,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "DifficultyTVC", for: indexPath) as? DifficultyTVC else {
                 return UITableViewCell()
             }
+            cell.delegate = self
             cell.bindData(dataArray: difficultyLevels)
             cell.selectionStyle = .none
             cell.backgroundColor = UIColor.clear
@@ -123,4 +127,33 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+}
+
+extension HomeViewController : DifficultyDelegate {
+    func didSelectDifficulty(_ difficulty: String) {
+        
+        if let sudokuScreen = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as? ViewController {
+            
+            let selectedDifficulty = difficulty.lowercased()
+            
+            switch selectedDifficulty {
+            case "random":
+                sudokuScreen.board = SudokuBoardDataSource.getRandomSudoku()
+            case "easy":
+                sudokuScreen.board = SudokuBoardDataSource.getEasySudoku()
+            case "medium":
+                sudokuScreen.board = SudokuBoardDataSource.getMediumSudoku()
+            case "hard":
+                sudokuScreen.board = SudokuBoardDataSource.getHardSudoku()
+            case "expert":
+                sudokuScreen.board = SudokuBoardDataSource.getExpertSudoku()
+            default:
+                break
+            }
+            
+            sudokuScreen.modalPresentationStyle = .fullScreen
+            
+            self.present(sudokuScreen, animated: true)
+        }
+    }
 }

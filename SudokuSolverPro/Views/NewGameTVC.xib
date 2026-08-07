@@ -50,11 +50,22 @@
                                     <constraint firstItem="gXW-eX-CtU" firstAttribute="leading" secondItem="Cou-g4-gHK" secondAttribute="trailing" constant="8" id="tGy-8J-MTB"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhM-Af-TVL">
+                                <rect key="frame" x="0.0" y="0.0" width="280" height="56"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <connections>
+                                    <action selector="newGameTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="XJn-n0-TMY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="iCb-ir-gLR" firstAttribute="centerY" secondItem="LLx-Na-ePy" secondAttribute="centerY" id="2Cg-5R-DwV"/>
+                            <constraint firstItem="nhM-Af-TVL" firstAttribute="top" secondItem="LLx-Na-ePy" secondAttribute="top" id="ES7-5t-Pz4"/>
+                            <constraint firstAttribute="bottom" secondItem="nhM-Af-TVL" secondAttribute="bottom" id="Hsn-Qd-NOE"/>
+                            <constraint firstAttribute="trailing" secondItem="nhM-Af-TVL" secondAttribute="trailing" id="M9s-46-brR"/>
                             <constraint firstItem="iCb-ir-gLR" firstAttribute="centerX" secondItem="LLx-Na-ePy" secondAttribute="centerX" id="N08-5E-aPF"/>
+                            <constraint firstItem="nhM-Af-TVL" firstAttribute="leading" secondItem="LLx-Na-ePy" secondAttribute="leading" id="diy-92-g1o"/>
                         </constraints>
                     </view>
                 </subviews>

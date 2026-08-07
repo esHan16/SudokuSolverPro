@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol DifficultyDelegate: AnyObject {
+    func didSelectDifficulty(_ difficulty: String)
+}
+
 class NewGameTVC: UITableViewCell {
+    
+    weak var delegate : DifficultyDelegate?
 
     @IBOutlet weak var newGameLabel: UILabel!
     @IBOutlet weak var playImage: UIImageView!
@@ -26,6 +32,9 @@ class NewGameTVC: UITableViewCell {
         playBackView.layer.cornerRadius = 12.0
         playBackView.layer.cornerCurve = .continuous
         
+    }
+    @IBAction func newGameTapped(_ sender: Any) {
+        delegate?.didSelectDifficulty("random")
     }
     
 }
