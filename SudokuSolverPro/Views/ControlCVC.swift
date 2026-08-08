@@ -8,8 +8,8 @@
 import UIKit
 
 class ControlCVC: UICollectionViewCell {
-    @IBOutlet weak var overlayView: UIView!
     
+    @IBOutlet weak var overlayView: UIView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var resetImage: UIImageView!
     @IBOutlet weak var undoImage: UIImageView!

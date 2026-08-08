@@ -139,14 +139,19 @@ extension HomeViewController : DifficultyDelegate {
             switch selectedDifficulty {
             case "random":
                 sudokuScreen.board = SudokuBoardDataSource.getRandomSudoku()
+                sudokuScreen.selectedDifficultyLevel = "Random"
             case "easy":
                 sudokuScreen.board = SudokuBoardDataSource.getEasySudoku()
+                sudokuScreen.selectedDifficultyLevel = "Easy"
             case "medium":
                 sudokuScreen.board = SudokuBoardDataSource.getMediumSudoku()
+                sudokuScreen.selectedDifficultyLevel = "Medium"
             case "hard":
                 sudokuScreen.board = SudokuBoardDataSource.getHardSudoku()
+                sudokuScreen.selectedDifficultyLevel = "Hard"
             case "expert":
                 sudokuScreen.board = SudokuBoardDataSource.getExpertSudoku()
+                sudokuScreen.selectedDifficultyLevel = "Expert"
             default:
                 break
             }

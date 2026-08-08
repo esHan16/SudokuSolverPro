@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     var selectedGridIndices: [Int] = []
     var numberOfKeys: Int = 9
     var numberOfControlKeys: Int = 3
+    
+    var selectedDifficultyLevel : String = ""
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var difficultyLevelLabel: UILabel!
@@ -50,9 +52,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         count = nonZeroCount
-
         actualCount = count
-
         tempBoard = board
 
         sudokuBackView.backgroundColor = UIColor.outerBoundary()
@@ -87,7 +87,7 @@ class ViewController: UIViewController {
 
         updatePausePlayUI()
 
-        self.difficultyLevelLabel.text = "Medium"
+        self.difficultyLevelLabel.text = selectedDifficultyLevel
         self.difficultyLevelLabel.font = UIFont.semibold(22)
         self.difficultyLevelLabel.textColor = UIColor.textColor()
 
@@ -298,7 +298,7 @@ class ViewController: UIViewController {
 
             let leaveAction = UIAlertAction(title: "Leave", style: .destructive)
             { [weak self] _ in
-                stopTimer()
+                self?.stopTimer()
                 self?.dismiss(animated: true)
             }
 
