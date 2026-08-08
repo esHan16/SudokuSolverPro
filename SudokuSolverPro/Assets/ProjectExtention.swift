@@ -73,6 +73,10 @@ extension UIColor {
         UIColor(red: 238, green: 238, blue: 238)
     }
     
+    static func stateTitleColor() -> UIColor {
+        UIColor(red: 65, green: 71, blue: 85)
+    }
+    
 }
 
 extension UIFont {

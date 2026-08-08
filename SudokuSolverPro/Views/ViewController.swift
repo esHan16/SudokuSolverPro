@@ -41,6 +41,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var homeButtonImage: UIImageView!
     @IBOutlet weak var timerIcon: UIImageView!
     @IBOutlet weak var controlCV: UICollectionView!
+    
+    @IBOutlet weak var playPauseBtn: UIButton!
+    
+    @IBOutlet weak var difficultyLabelTopCons: NSLayoutConstraint!
+    
+    @IBOutlet weak var timerView: UIView!
+    
     private var timer: Timer?
     private var startDate: Date?
     private var remainingSeconds: Int = 0
@@ -118,6 +125,42 @@ class ViewController: UIViewController {
             }
         }
 
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        showSudokuAlert()
+    }
+    
+    func showSudokuAlert() {
+        let alert = UIAlertController(
+            title: "Ready to Solve?",
+            message: "Would you like to start solving this Sudoku puzzle?",
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
+            print("User tapped Yes")
+            self.playPauseTapped(self)
+        }
+        
+        let noAction = UIAlertAction(title: "No", style: .cancel) { [weak self] _ in
+             print("User tapped No")
+            self?.hideTimer()
+        }
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func hideTimer() {
+        difficultyLabelTopCons.constant = 26
+        timerView.isHidden = true
+        pausePlayButtonImage.isHidden = true
+        playPauseBtn.isHidden = true
     }
 
     func startTimer(duration: Int) {
